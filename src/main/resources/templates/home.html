@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FileDropX</title>
+
+    <script src="https://kit.fontawesome.com/106a3659bb.js" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link th:href="@{/styles/css/homestyle.css}" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-test">
+    <h1 class="header-title">FileDropX</h1>
+    <h3 class="header-line">Drop it Like It’s Shared</h3>
+</div>
+
+<main>
+    <div class="animation-container">
+        <div class="paper-airplane"></div>
+        <img th:src="@{/images/left-computer.png}" alt="Left computer" class="computer left-computer">
+        <img th:src="@{/images/right-computer.png}" alt="Right computer" class="computer right-computer">
+        <div class="dotted-path"></div>
+    </div>
+
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="card-container">
+        <div class="card">
+            <!-- Front Face -->
+            <div class="card-front">
+                <h3>About</h3>
+                <br>
+                <p>
+                    Welcome to our innovative File Sharing Platform—your secure, seamless solution for transferring files across any device with ease.
+                </p>
+                <p><strong>Key Features:</strong></p>
+                &nbsp;&nbsp;&nbsp;&nbsp;💠 Lightning-fast and secure file transfers<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;💠 Intuitive and user-friendly interface<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;💠 Cross-platform compatibility<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;💠 No file size restrictions<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;💠 Real-time collaboration and sharing<br><br>
+                <p>
+                    Experience a smarter, safer, and more convenient way to share files. Join us and revolutionize how you connect and collaborate!
+                </p>
+                <button class="login-btn">Login</button>
+            </div>
+
+            <!-- Back Face -->
+            <div class="card-back">
+                <div class="social">
+                    <div class="go"><i class="fab fa-google"></i> Google</div>
+                    <div class="github"><i class="fab fa-github"></i> GitHub</div>
+                </div>
+                <button class="about-btn">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const card = document.querySelector('.card');
+            const toggleButtons = document.querySelectorAll('.login-btn, .about-btn');
+
+            toggleButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    card.classList.toggle('flipped');
+                });
+            });
+        });
+    </script>
+</main>
+
+</body>
+</html>
