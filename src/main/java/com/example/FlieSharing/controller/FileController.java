@@ -10,16 +10,16 @@ public class FileController {
 
     @GetMapping("")
     public String home() {
-        return "home"; // maps to /files
+        return "home"; // returns home.html
     }
 
     @GetMapping("/list")
     public String listFiles() {
-        return "list-files"; // maps to /files/list
+        return "list-files"; // create list-files.html
     }
 
     @GetMapping("/share")
     public String shareFile() {
-        return "share-file"; // maps to /files/share
+        return "share-file"; // create share-file.html
     }
 }

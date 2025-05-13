@@ -1,88 +1,242 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileDropX</title>
-
+    <title>FileDropX - Futuristic File Sharing</title>
     <script src="https://kit.fontawesome.com/106a3659bb.js" crossorigin="anonymous"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <link th:href="@{/styles/css/homestyle.css}" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link th:href="@{/styles/css/homestyle.css}" rel="stylesheet" />
     <style>
-        *, *::before, *::after {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
+        /* Critical inline styles to ensure card visibility before CSS loads */
+        .card-container {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .card {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .login-btn {
+            display: block !important;
+            visibility: visible !important;
         }
     </style>
 </head>
 <body>
+<!-- Grid Background -->
+<div class="grid"></div>
 
-<div class="header-test">
+<!-- Glow Effects -->
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Header -->
+<div class="header">
     <h1 class="header-title">FileDropX</h1>
-    <h3 class="header-line">Drop it Like It’s Shared</h3>
+    <h3 class="header-line">Drop it Like It's Shared</h3>
 </div>
 
+<!-- Animation Container -->
 <main>
     <div class="animation-container">
-        <div class="paper-airplane"></div>
-        <img th:src="@{/images/left-computer.png}" alt="Left computer" class="computer left-computer">
-        <img th:src="@{/images/right-computer.png}" alt="Right computer" class="computer right-computer">
-        <div class="dotted-path"></div>
+        <!-- Only left computer -->
+        <img th:src="@{/styles/assets/leftpc.png}" alt="Left Computer" class="computer left-computer">
+
+        <!-- Futuristic data portal -->
+        <div class="data-portal"></div>
+
+        <!-- Animated file -->
+        <div class="file"></div>
+
+        <!-- Path effect -->
+        <div class="path"></div>
     </div>
-
-    <div class="background">
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <div class="card-container">
-        <div class="card">
-            <!-- Front Face -->
-            <div class="card-front">
-                <h3>About</h3>
-                <br>
-                <p>
-                    Welcome to our innovative File Sharing Platform—your secure, seamless solution for transferring files across any device with ease.
-                </p>
-                <p><strong>Key Features:</strong></p>
-                &nbsp;&nbsp;&nbsp;&nbsp;💠 Lightning-fast and secure file transfers<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;💠 Intuitive and user-friendly interface<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;💠 Cross-platform compatibility<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;💠 No file size restrictions<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;💠 Real-time collaboration and sharing<br><br>
-                <p>
-                    Experience a smarter, safer, and more convenient way to share files. Join us and revolutionize how you connect and collaborate!
-                </p>
-                <button class="login-btn">Login</button>
-            </div>
-
-            <!-- Back Face -->
-            <div class="card-back">
-                <div class="social">
-                    <div class="go"><i class="fab fa-google"></i> Google</div>
-                    <div class="github"><i class="fab fa-github"></i> GitHub</div>
-                </div>
-                <button class="about-btn">Back</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const card = document.querySelector('.card');
-            const toggleButtons = document.querySelectorAll('.login-btn, .about-btn');
-
-            toggleButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    card.classList.toggle('flipped');
-                });
-            });
-        });
-    </script>
 </main>
 
+<!-- Card Container -->
+<div class="card-container">
+    <div class="card">
+        <div class="card-front">
+            <h3>Experience FileDropX</h3>
+            <p>Welcome to the future of file sharing. Our platform combines speed, security, and simplicity to make transferring files between devices effortless.</p>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-bolt"></i></span>
+                    <span>Lightning-fast transfers across devices</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-shield-alt"></i></span>
+                    <span>End-to-end encryption for maximum security</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-infinity"></i></span>
+                    <span>No size limits on your transfers</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-users"></i></span>
+                    <span>Real-time collaboration tools</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-globe"></i></span>
+                    <span>Cross-platform compatibility</span>
+                </div>
+            </div>
+
+            <button class="login-btn">Login</button>
+        </div>
+
+        <div class="card-back">
+            <form>
+                <h3>Connect</h3>
+                <p>Sign in with your preferred account to start sharing files instantly.</p>
+
+                <div class="social">
+                    <a href="/oauth2/authorization/google" class="go">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </a>
+                    <a href="/oauth2/authorization/github" class="gitHub">
+                        <i class="fab fa-github"></i> Continue with GitHub
+                    </a>
+                </div>
+
+                <div class="about-btn">
+                    <i class="fas fa-arrow-left"></i> Back to info
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    // Card flip animation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make sure the card and button are visible
+        const card = document.querySelector('.card');
+        const loginBtn = document.querySelector('.login-btn');
+
+        if (card) {
+            card.style.display = 'block';
+        }
+
+        if (loginBtn) {
+            loginBtn.style.display = 'block';
+        }
+
+        // Set up event listeners
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function() {
+                card.classList.toggle('flipped');
+            });
+        }
+
+        const aboutBtn = document.querySelector('.about-btn');
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', function() {
+                card.classList.toggle('flipped');
+            });
+        }
+    });
+
+    // Create particles
+    function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+
+            // Random size between 2-6px
+            const size = Math.random() * 4 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            // Random position
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            particle.style.left = `${posX}%`;
+            particle.style.top = `${posY}%`;
+
+            // Random animation delay
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+
+            // Random opacity
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    // Data bits animation
+    function createDataBits() {
+        setInterval(() => {
+            // Create a data bit
+            const bit = document.createElement('div');
+            bit.classList.add('data-bit');
+
+            // Random size
+            const size = Math.random() * 4 + 2;
+            bit.style.width = `${size}px`;
+            bit.style.height = `${size}px`;
+
+            // Position near portal
+            const portal = document.querySelector('.data-portal');
+            const portalRect = portal.getBoundingClientRect();
+            const container = document.querySelector('.animation-container');
+            const containerRect = container.getBoundingClientRect();
+
+            const portalX = portalRect.left - containerRect.left + portalRect.width / 2;
+            const portalY = portalRect.top - containerRect.top + portalRect.height / 2;
+
+            // Random angle around the portal
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 20 + 60;
+
+            const posX = portalX + Math.cos(angle) * distance;
+            const posY = portalY + Math.sin(angle) * distance;
+
+            bit.style.left = `${posX}px`;
+            bit.style.top = `${posY}px`;
+
+            // Add to container
+            container.appendChild(bit);
+
+            // Animate towards portal
+            setTimeout(() => {
+                bit.style.left = `${portalX}px`;
+                bit.style.top = `${portalY}px`;
+                bit.style.opacity = '0';
+                bit.style.transform = 'scale(0.1)';
+            }, 10);
+
+            // Remove after animation
+            setTimeout(() => {
+                bit.remove();
+            }, 2500);
+        }, 300);
+    }
+
+    // Initialize particles and data bits
+    window.addEventListener('load', function() {
+        createParticles();
+        createDataBits();
+
+        // Additional check to ensure card and button visibility on full page load
+        const card = document.querySelector('.card');
+        const loginBtn = document.querySelector('.login-btn');
+
+        if (card) {
+            card.style.display = 'block';
+        }
+
+        if (loginBtn) {
+            loginBtn.style.display = 'block';
+        }
+    });
+</script>
 </body>
 </html>
