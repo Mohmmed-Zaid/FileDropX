@@ -1,32 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Share File</title>
-    <link rel="icon" type="image/png" th:href="@{images/file-sharing.png}">
-    <link th:href="@{/styles/css/share-files.css}" rel="stylesheet" />
+    <title>FileDropX - Share File</title>
+    <link rel="icon" type="image/png" th:href="@{/logo.jpg}">
+    <link rel="stylesheet" th:href="@{/css/share-file.css}" href="/css/share-file.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<div class="container">
-    <div class="box download-box">
-        <h1>Download Your File</h1>
-        <p>File Name: <span th:text="${file.fileName}"></span></p>
-        <p>Uploaded By: <span th:text="${file.uploadedBy}"></span></p>
-        <form th:action="@{/files/download/{id}(id=${file.id})}">
-            <button type="submit" class="download-button">
-                <i class="fas fa-download"></i> Download File
-            </button>
-        </form>
+<div class="filedropx-container">
+    <div class="logo-section">
+        <h1 class="logo">FileDropX</h1>
+        <p class="tagline">Drop it Like It's Shared</p>
     </div>
 
-    <div class="box share-box">
-        <h2>Share This Page</h2>
-        <p>URL: <input type="text" id="shareUrl" th:value="${shareUrl}" readonly/></p>
-        <button class="copy-button" onclick="copyToClipboard()">
-            <i class="fas fa-copy"></i> Copy URL
-        </button>
+    <div class="content-container">
+        <div class="download-section">
+            <div class="file-info-box">
+                <h2>Download Your File</h2>
+                <div class="file-details">
+                    <p><span class="detail-label">File Name:</span> <span class="detail-value" th:text="${file.fileName}"></span></p>
+                    <p><span class="detail-label">Uploaded By:</span> <span class="detail-value" th:text="${file.uploadedBy}"></span></p>
+                </div>
+                <div class="download-area">
+                    <div class="drop-zone">
+                        <div class="file-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                    <form th:action="@{/files/download/{id}(id=${file.id})}">
+                        <button type="submit" class="download-button">
+                            <i class="fas fa-bolt"></i> Download File
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="share-section">
+            <div class="share-box">
+                <h2>Share This File</h2>
+                <div class="url-container">
+                    <input type="text" id="shareUrl" th:value="${shareUrl}" readonly/>
+                    <button class="copy-button" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+                <div class="features-list">
+                    <div class="feature">
+                        <i class="fas fa-bolt"></i>
+                        <span>Lightning-fast transfers</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-lock"></i>
+                        <span>End-to-end encryption</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-infinity"></i>
+                        <span>No size limits</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <a href="/files/home" class="back-link">Back to File List</a>
+    <a href="/files/home" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Files
+    </a>
 </div>
 
 <script>
@@ -35,7 +75,14 @@
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         document.execCommand("copy");
-        alert("URL copied to clipboard: " + copyText.value);
+
+        // Show visual feedback
+        const copyButton = document.querySelector('.copy-button');
+        const originalText = copyButton.innerHTML;
+        copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => {
+            copyButton.innerHTML = originalText;
+        }, 2000);
     }
 </script>
 </body>

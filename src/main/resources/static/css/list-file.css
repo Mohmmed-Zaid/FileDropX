@@ -1,0 +1,608 @@
+/* FileDropX - Future of File Sharing CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #050b1f;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: auto;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(28, 70, 173, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(249, 123, 37, 0.2) 0%, transparent 40%);
+    background-attachment: fixed;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: rgba(11, 20, 47, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    box-shadow: 0 0 30px rgba(55, 18, 220, 0.3);
+    color: white;
+    padding: 15px 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.app-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+    margin: 0;
+}
+
+.tagline {
+    color: #a0a8c0;
+    font-size: 14px;
+    margin-top: -5px;
+    letter-spacing: 1px;
+}
+
+.logout-button {
+    background: linear-gradient(45deg, #ff512f, #f09819);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.logout-button i {
+    margin-right: 8px;
+}
+
+.logout-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 81, 47, 0.3);
+}
+
+/* Main Container Styles */
+.main-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 120px auto 40px;
+    padding: 0 20px;
+}
+
+/* Card Styles */
+.upload-container, .uploaded-files-container {
+    background: rgba(11, 20, 47, 0.7);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    backdrop-filter: blur(20px);
+    padding: 0;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upload-container {
+    width: 450px;
+}
+
+.uploaded-files-container {
+    width: 650px;
+}
+
+.upload-container:hover, .uploaded-files-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(79, 172, 254, 0.3);
+}
+
+.card-header {
+    background: linear-gradient(90deg, rgba(79, 172, 254, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+}
+
+.header-icon {
+    font-size: 24px;
+    margin-right: 15px;
+    color: #4facfe;
+}
+
+.upload-title, .uploaded-files-title {
+    font-size: 22px;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+/* Upload Form Styles */
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+}
+
+.drag-drop-area {
+    border: 2px dashed #4facfe;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+    background: rgba(79, 172, 254, 0.05);
+}
+
+.drag-drop-area:hover {
+    background: rgba(79, 172, 254, 0.1);
+    transform: scale(1.01);
+}
+
+.drag-drop-area p {
+    color: #a0a8c0;
+    margin: 15px 0;
+}
+
+.drag-drop-area .upload-icon {
+    font-size: 50px;
+    color: #4facfe;
+    margin-bottom: 15px;
+}
+
+.drag-drop-area.drag-over {
+    background-color: rgba(79, 172, 254, 0.15);
+    border-color: #00f2fe;
+    transform: scale(1.02);
+}
+
+.file-input {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+}
+
+.custom-file-upload:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+}
+
+.file-name {
+    font-size: 14px;
+    color: #a0a8c0;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.file-selected {
+    color: #ffffff;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+}
+
+/* Input Group Styles */
+.input-group {
+    margin-bottom: 25px;
+    width: 100%;
+    position: relative;
+}
+
+.text-input {
+    width: 100%;
+    padding: 15px 15px 15px 40px;
+    font-size: 15px;
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #4facfe;
+    background: rgba(79, 172, 254, 0.1);
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+}
+
+.creative-input-group .input-label {
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #a0a8c0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.creative-input-group.focused .input-label,
+.creative-input-group .text-input:focus + .input-label {
+    top: -12px;
+    left: 12px;
+    font-size: 12px;
+    color: #4facfe;
+    background: rgba(11, 20, 47, 0.8);
+    padding: 0 8px;
+}
+
+.creative-input-group .input-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #4facfe;
+}
+
+/* Upload Button Styles */
+.upload-button {
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: #ffffff;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+}
+
+.upload-button i {
+    margin-right: 10px;
+}
+
+.upload-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+}
+
+/* Table Styles */
+.table-wrapper {
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4facfe rgba(255, 255, 255, 0.1);
+}
+
+.uploaded-files-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.uploaded-files-table th {
+    padding: 15px;
+    text-align: left;
+    color: #a0a8c0;
+    font-weight: 500;
+    font-size: 15px;
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+}
+
+.uploaded-files-table td {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: none;
+    color: #ffffff;
+}
+
+.uploaded-files-table tr td:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+.uploaded-files-table tr td:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+.uploaded-files-table tr:hover td {
+    background: rgba(79, 172, 254, 0.1);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+}
+
+.file-icon {
+    color: #4facfe;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* Action Buttons */
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.share-button {
+    color: #4facfe;
+    background: rgba(79, 172, 254, 0.1);
+}
+
+.share-button:hover {
+    color: #ffffff;
+    background: rgba(79, 172, 254, 0.8);
+    transform: scale(1.1);
+}
+
+.delete-button {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+}
+
+.delete-button:hover {
+    color: #ffffff;
+    background: rgba(255, 107, 107, 0.8);
+    transform: scale(1.1);
+}
+
+/* Scrollbar Styling */
+.table-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(79, 172, 254, 0.5);
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(79, 172, 254, 0.8);
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    text-align: center;
+    padding: 10px;
+    color: #a0a8c0;
+    font-size: 13px;
+    border-top: 1px solid rgba(79, 172, 254, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scroll-indicator i {
+    margin-right: 8px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-5px);}
+    60% {transform: translateY(-3px);}
+}
+
+/* Copy tooltip */
+.copy-tooltip {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(79, 172, 254, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.copy-tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Background Effects */
+.grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(79, 172, 254, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 172, 254, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -1;
+    perspective: 1000px;
+    transform: rotateX(50deg) translateY(-100px) translateZ(-200px);
+    opacity: 0.3;
+}
+
+.glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -2;
+}
+
+.glow-1 {
+    top: -150px;
+    left: 20%;
+    width: 500px;
+    height: 500px;
+    background: rgba(79, 172, 254, 0.15);
+}
+
+.glow-2 {
+    bottom: -150px;
+    right: 20%;
+    width: 600px;
+    height: 600px;
+    background: rgba(249, 123, 37, 0.1);
+}
+
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(79, 172, 254, 0.5);
+    animation: float 15s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    25% {
+        transform: translateY(-30px) translateX(20px);
+    }
+    50% {
+        transform: translateY(0) translateX(40px);
+    }
+    75% {
+        transform: translateY(30px) translateX(20px);
+    }
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1100px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .upload-container,
+    .uploaded-files-container {
+        width: 100%;
+        max-width: 650px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        padding: 15px;
+    }
+
+    .app-name {
+        font-size: 28px;
+    }
+
+    .tagline {
+        font-size: 12px;
+    }
+
+    .logout-button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .main-container {
+        margin-top: 100px;
+        padding: 0 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card-header {
+        padding: 15px;
+    }
+
+    .header-icon {
+        font-size: 20px;
+    }
+
+    .upload-title, .uploaded-files-title {
+        font-size: 18px;
+    }
+
+    .upload-form {
+        padding: 15px;
+    }
+
+    .drag-drop-area {
+        padding: 20px;
+    }
+
+    .drag-drop-area .upload-icon {
+        font-size: 40px;
+    }
+
+    .table-wrapper {
+        padding: 10px;
+    }
+
+    .uploaded-files-table th,
+    .uploaded-files-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
