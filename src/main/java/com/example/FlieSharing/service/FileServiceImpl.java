@@ -4,9 +4,9 @@ import com.example.FlieSharing.entity.FileEntity;
 import com.example.FlieSharing.model.FileModel;
 import com.example.FlieSharing.repository.FileRepository;
 import com.example.FlieSharing.exception.FileNotFoundException;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,9 +45,7 @@ public class FileServiceImpl implements FileService {
         entity.setUploadTime(LocalDateTime.now());
         entity.setExpiryTime(LocalDateTime.now().plusDays(1));
         entity.setFileData(file.getBytes());
-
         fileRepository.save(entity);
-
         return ResponseEntity.ok().body(convertToModel(entity));
     }
 
@@ -63,12 +61,18 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public ResponseEntity<?> deleteFile(int id) {
-        Optional<FileEntity> entity = fileRepository.findById((long) id);  // Cast to match Long type
-        if (entity.isPresent()) {
-            fileRepository.delete(entity.get());
+        // Debug log
+        System.out.println("Attempting to delete file with ID: " + id);
+
+        try {
+            // This is a more direct approach
+            fileRepository.deleteById((long) id);
+            System.out.println("File deletion command executed for ID: " + id);
             return ResponseEntity.ok().body("File Deleted Successfully");
-        } else {
-            throw new FileNotFoundException("File with ID " + id + " not found");
+        } catch (Exception e) {
+            System.err.println("Error during deletion of file ID " + id + ": " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting file: " + e.getMessage());
         }
     }
 }
