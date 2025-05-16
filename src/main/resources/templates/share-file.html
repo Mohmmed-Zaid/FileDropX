@@ -28,11 +28,10 @@
                             <i class="fas fa-file-alt"></i>
                         </div>
                     </div>
-                    <form th:action="@{/files/download/{id}(id=${file.id})}">
-                        <button type="submit" class="download-button">
-                            <i class="fas fa-bolt"></i> Download File
-                        </button>
-                    </form>
+                    <!-- Link with text-decoration: none -->
+                    <a th:href="@{/download/{id}(id=${file.id})}" class="download-button" style="text-decoration: none;">
+                        <i class="fas fa-bolt"></i> Download File
+                    </a>
                 </div>
             </div>
         </div>
@@ -64,7 +63,7 @@
         </div>
     </div>
 
-    <a href="/files/home" class="back-link">
+    <a href="/files" class="back-link" style="text-decoration: none;">
         <i class="fas fa-arrow-left"></i> Back to Files
     </a>
 </div>

@@ -60,6 +60,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public FileEntity getFileById(Long id) {
+        return fileRepository.findById(id).orElse(null);
+    }
+
+
+    @Override
     public ResponseEntity<?> deleteFile(int id) {
         // Debug log
         System.out.println("Attempting to delete file with ID: " + id);

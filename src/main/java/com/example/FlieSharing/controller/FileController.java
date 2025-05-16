@@ -1,8 +1,13 @@
 package com.example.FlieSharing.controller;
 
+import com.example.FlieSharing.entity.FileEntity;
 import com.example.FlieSharing.model.FileModel;
 import com.example.FlieSharing.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +23,6 @@ import java.util.List;
 public class FileController {
     @Autowired
     private FileService fileService;
-
-    @GetMapping("/")
-    public String landing() {
-        return "home";
-    }
 
     @GetMapping("/home")
     public String home() {
@@ -71,6 +71,24 @@ public class FileController {
             e.printStackTrace();
             return "redirect:/files?error=share";
         }
+    }
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long id) {
+        FileEntity file = fileService.getFileById(id);
+
+        if (file == null || file.getFileData() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ByteArrayResource resource = new ByteArrayResource(file.getFileData());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getFileName() + "\"")
+                .contentLength(file.getFileData().length)
+                .body(resource);
     }
 
     @PostMapping("/files/delete/{id}")
