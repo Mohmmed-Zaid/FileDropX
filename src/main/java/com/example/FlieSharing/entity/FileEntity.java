@@ -24,8 +24,9 @@ public class FileEntity {
     private LocalDateTime expiryTime;
 
     @Lob
-    @Column(name = "file_data")
+    @Column(name = "file_data", columnDefinition = "LONGBLOB")
     private byte[] fileData;
+
 
     // Getters and Setters
 

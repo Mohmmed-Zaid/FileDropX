@@ -2,86 +2,400 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>FileDropX - Share File</title>
-    <link rel="icon" type="image/png" th:href="@{/logo.jpg}">
+    <link rel="icon" type="image/jpeg" href="/logo.jpg?v=2" />
+    <link rel="shortcut icon" type="image/jpeg" href="/logo.jpg?v=2" />
     <link rel="stylesheet" th:href="@{/css/share-file.css}" href="/css/share-file.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <div class="filedropx-container">
+    <div class="cyberpunk-bg"></div>
+
     <div class="logo-section">
-        <h1 class="logo">FileDropX</h1>
+        <div class="logo-wrapper">
+            <h1 class="logo">FileDropX</h1>
+            <div class="logo-glow"></div>
+        </div>
         <p class="tagline">Drop it Like It's Shared</p>
     </div>
 
     <div class="content-container">
-        <div class="download-section">
-            <div class="file-info-box">
-                <h2>Download Your File</h2>
-                <div class="file-details">
-                    <p><span class="detail-label">File Name:</span> <span class="detail-value" th:text="${file.fileName}"></span></p>
-                    <p><span class="detail-label">Uploaded By:</span> <span class="detail-value" th:text="${file.uploadedBy}"></span></p>
-                </div>
-                <div class="download-area">
-                    <div class="drop-zone">
+        <div class="share-section">
+            <div class="share-box">
+                <div class="glowing-border"></div>
+                <div class="cyber-lines"></div>
+                <h2>Share Your File</h2>
+                <div class="file-preview">
+                    <div class="file-icon-container">
                         <div class="file-icon">
                             <i class="fas fa-file-alt"></i>
                         </div>
+                        <div class="pulsing-circle"></div>
                     </div>
-                    <!-- Link with text-decoration: none -->
-                    <a th:href="@{/download/{id}(id=${file.id})}" class="download-button" style="text-decoration: none;">
-                        <i class="fas fa-bolt"></i> Download File
-                    </a>
+                    <div class="file-details">
+                        <p class="file-name" th:text="${file.fileName}">filename.txt</p>
+                        <p class="file-uploader">Uploaded by: <span th:text="${file.uploadedBy}">user</span></p>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="share-section">
-            <div class="share-box">
-                <h2>Share This File</h2>
                 <div class="url-container">
                     <input type="text" id="shareUrl" th:value="${shareUrl}" readonly/>
                     <button class="copy-button" onclick="copyToClipboard()">
                         <i class="fas fa-copy"></i> Copy
                     </button>
                 </div>
-                <div class="features-list">
-                    <div class="feature">
+
+                <div class="qr-code-container">
+                    <h3>Scan QR Code</h3>
+                    <div id="qrcode" class="qr-glow"></div>
+                    <p class="qr-code-time">Generated on: <span id="generationTime"></span></p>
+                    <p class="next-refresh">Next refresh in: <span id="nextRefreshTime">30:00</span></p>
+                    <button class="refresh-button" onclick="refreshQRCode()">
+                        <i class="fas fa-sync-alt"></i> Refresh QR Code
+                    </button>
+                </div>
+
+                <div class="expiry-notice">
+                    <i class="fas fa-clock"></i>
+                    <span>This link will expire in <strong id="expiryTime">24 hours : </strong></span>
+                    <div class="countdown-timer" id="countdown"></div>
+                </div>
+
+                <div class="sharing-options">
+                    <h3>Share via</h3>
+                    <div class="social-buttons">
+                        <a href="#" id="whatsappShare" class="social-button whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" id="emailShare" class="social-button email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="#" id="facebookShare" class="social-button facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" id="twitterShare" class="social-button twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="action-panel">
+                <a th:href="@{/download/{id}(id=${file.id})}" class="action-button download-button">
+                    <span class="button-content"><i class="fas fa-download"></i> Download</span>
+                    <span class="button-glow"></span>
+                </a>
+                <a href="/files" class="action-button back-button">
+                    <span class="button-content"><i class="fas fa-arrow-left"></i> Back to Files</span>
+                    <span class="button-glow"></span>
+                </a>
+            </div>
+
+            <div class="features-list">
+                <div class="feature">
+                    <div class="feature-icon">
                         <i class="fas fa-bolt"></i>
-                        <span>Lightning-fast transfers</span>
                     </div>
-                    <div class="feature">
+                    <div class="feature-details">
+                        <h3>Lightning-fast transfers</h3>
+                        <p>Files are transferred directly from our servers, ensuring maximum speed.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
                         <i class="fas fa-lock"></i>
-                        <span>End-to-end encryption</span>
                     </div>
-                    <div class="feature">
+                    <div class="feature-details">
+                        <h3>Secure sharing</h3>
+                        <p>Unique links with 24-hour expiration ensure your files remain private.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
                         <i class="fas fa-infinity"></i>
-                        <span>No size limits</span>
+                    </div>
+                    <div class="feature-details">
+                        <h3>No size limits</h3>
+                        <p>Share files of any size with absolutely no restrictions.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <a href="/files" class="back-link" style="text-decoration: none;">
-        <i class="fas fa-arrow-left"></i> Back to Files
-    </a>
 </div>
 
+<div class="floating-particles">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+    <div class="particle particle-6"></div>
+</div>
+
+<div class="cyber-grid"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+    // Store file info for dynamic QR code updates
+    const fileInfo = {
+        id: document.querySelector('a[href^="/download/"]')?.href.split('/').pop() || '',
+        fileName: document.querySelector('.file-name')?.textContent || 'file',
+        shareUrl: document.getElementById("shareUrl")?.value || window.location.href
+    };
+
+    // Set expiration time - 24 hours from now
+    const expiryDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    const expiryTimestamp = expiryDate.getTime();
+    let qrLastUpdated = new Date();
+
+    // QR Code auto-refresh settings (30 minutes in milliseconds)
+    const QR_REFRESH_INTERVAL = 30 * 60 * 1000;
+    let qrRefreshTimer;
+    let qrRefreshCountdown;
+    let nextRefreshTime = QR_REFRESH_INTERVAL;
+
+    // Generate QR code with timestamp to make it dynamic
+    function generateQRCode() {
+        const shareUrl = fileInfo.shareUrl;
+        qrLastUpdated = new Date();
+        nextRefreshTime = QR_REFRESH_INTERVAL;
+
+        // Add timestamp to make QR code unique each time
+        const dynamicUrl = `${shareUrl}${shareUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+
+        if (shareUrl) {
+            // Clear any existing QR code first
+            const qrcodeElement = document.getElementById("qrcode");
+            qrcodeElement.innerHTML = '';
+
+            // Generate new QR code
+            new QRCode(qrcodeElement, {
+                text: dynamicUrl,
+                width: 128,
+                height: 128,
+                colorDark: "#4285f4",
+                colorLight: "#111827",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Update generation time
+            document.getElementById("generationTime").textContent = qrLastUpdated.toLocaleTimeString();
+
+            // Show success animation for auto-refreshes
+            if (arguments[0] === 'auto') {
+                showAutoRefreshSuccess();
+            }
+        }
+    }
+
+    // Refresh QR code
+    function refreshQRCode() {
+        generateQRCode();
+
+        // Show visual feedback
+        const refreshButton = document.querySelector('.refresh-button');
+        const originalText = refreshButton.innerHTML;
+        refreshButton.innerHTML = '<i class="fas fa-check"></i> Updated!';
+
+        // Reset after 2 seconds
+        setTimeout(() => {
+            refreshButton.innerHTML = originalText;
+        }, 2000);
+
+        // Reset the auto-refresh timer
+        resetQrRefreshTimer();
+    }
+
+    // Show auto-refresh success notification
+    function showAutoRefreshSuccess() {
+        // Create a temporary notification
+        const notification = document.createElement('div');
+        notification.className = 'auto-refresh-notification';
+        notification.innerHTML = '<i class="fas fa-sync-alt"></i> QR Code Auto-Refreshed';
+        document.querySelector('.qr-code-container').appendChild(notification);
+
+        // Animate and remove after 3 seconds
+        setTimeout(() => {
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 2500);
+        }, 100);
+    }
+
+    // Set up auto-refresh timer for QR code
+    function setupQrRefreshTimer() {
+        // Clear any existing timers
+        if (qrRefreshTimer) clearInterval(qrRefreshTimer);
+        if (qrRefreshCountdown) clearInterval(qrRefreshCountdown);
+
+        // Set up countdown display timer (updates every second)
+        qrRefreshCountdown = setInterval(() => {
+            nextRefreshTime -= 1000;
+
+            if (nextRefreshTime <= 0) {
+                nextRefreshTime = 0;
+            }
+
+            // Update the display
+            const minutes = Math.floor(nextRefreshTime / 60000);
+            const seconds = Math.floor((nextRefreshTime % 60000) / 1000);
+            document.getElementById("nextRefreshTime").textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+
+        // Set up the actual refresh timer
+        qrRefreshTimer = setInterval(() => {
+            generateQRCode('auto');  // Pass 'auto' flag to indicate auto-refresh
+            nextRefreshTime = QR_REFRESH_INTERVAL; // Reset countdown
+        }, QR_REFRESH_INTERVAL);
+    }
+
+    // Reset the QR refresh timer
+    function resetQrRefreshTimer() {
+        nextRefreshTime = QR_REFRESH_INTERVAL;
+        document.getElementById("nextRefreshTime").textContent = "30:00";
+        setupQrRefreshTimer();
+    }
+
+    // Update countdown timer for link expiry
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const timeLeft = expiryTimestamp - now;
+
+        if (timeLeft <= 0) {
+            document.getElementById("countdown").innerHTML = "EXPIRED";
+            document.getElementById("expiryTime").textContent = "EXPIRED";
+            return;
+        }
+
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown").innerHTML =
+            hours.toString().padStart(2, '0') + ":" +
+            minutes.toString().padStart(2, '0') + ":" +
+            seconds.toString().padStart(2, '0');
+    }
+
+    // Initialize on page load
+    window.onload = function() {
+        // Initialize QR code
+        generateQRCode();
+
+        // Start countdown timer for link expiry
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Start QR auto-refresh timer
+        setupQrRefreshTimer();
+
+        // Add animation for floating particles
+        animateParticles();
+
+        // Set up share buttons
+        setupSharingButtons();
+    };
+
+    function animateParticles() {
+        const particles = document.querySelectorAll('.particle');
+        particles.forEach(particle => {
+            setRandomPosition(particle);
+            setRandomAnimation(particle);
+        });
+    }
+
+    function setRandomPosition(element) {
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        element.style.left = `${x}%`;
+        element.style.top = `${y}%`;
+    }
+
+    function setRandomAnimation(element) {
+        const duration = 20 + Math.random() * 30;
+        const delay = Math.random() * 5;
+        element.style.animationDuration = `${duration}s`;
+        element.style.animationDelay = `${delay}s`;
+    }
+
     function copyToClipboard() {
-        var copyText = document.getElementById("shareUrl");
+        const copyText = document.getElementById("shareUrl");
+
+        // Select the text
         copyText.select();
         copyText.setSelectionRange(0, 99999);
-        document.execCommand("copy");
 
+        // Use the newer Clipboard API if available, falling back to document.execCommand
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(copyText.value)
+                .then(showCopySuccess)
+                .catch(() => {
+                    // Fallback
+                    document.execCommand("copy");
+                    showCopySuccess();
+                });
+        } else {
+            // For older browsers
+            document.execCommand("copy");
+            showCopySuccess();
+        }
+    }
+
+    function showCopySuccess() {
         // Show visual feedback
         const copyButton = document.querySelector('.copy-button');
         const originalText = copyButton.innerHTML;
         copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+
+        // Reset after 2 seconds
         setTimeout(() => {
             copyButton.innerHTML = originalText;
         }, 2000);
+    }
+
+    // Set up social sharing buttons with proper functionality
+    function setupSharingButtons() {
+        const shareUrl = document.getElementById("shareUrl").value;
+        const fileName = document.querySelector('.file-name').textContent;
+        const text = `Check out this file (${fileName}) I shared with FileDropX: `;
+
+        // WhatsApp
+        document.getElementById('whatsappShare').addEventListener('click', function(e) {
+            e.preventDefault();
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + shareUrl)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // Email
+        document.getElementById('emailShare').addEventListener('click', function(e) {
+            e.preventDefault();
+            const subject = encodeURIComponent("File shared with you");
+            const body = encodeURIComponent(`I've shared a file (${fileName}) with you. You can download it here: ${shareUrl} (Expires in 24 hours)`);
+            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        });
+
+        // Facebook
+        document.getElementById('facebookShare').addEventListener('click', function(e) {
+            e.preventDefault();
+            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+            window.open(facebookUrl, '_blank');
+        });
+
+        // Twitter
+        document.getElementById('twitterShare').addEventListener('click', function(e) {
+            e.preventDefault();
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
+            window.open(twitterUrl, '_blank');
+        });
     }
 </script>
 </body>
