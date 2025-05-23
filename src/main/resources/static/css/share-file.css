@@ -973,4 +973,32 @@ h3::before {
 .particle-3 {
   width: 3px;
   height: 3px;
-  box-shadow:
+  box-shadow: 0 0 16px 4px rgba(0, 198, 255, 0.9); /* Original had only 3 particles */
+}
+
+/* Original float animation */
+@keyframes float {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+  25% { transform: translateY(-20vh) translateX(5vw) scale(1.05); opacity: 0.9; }
+  50% { transform: translateY(-40vh) translateX(0vw) scale(1.1); opacity: 1; }
+  75% { transform: translateY(-60vh) translateX(-5vw) scale(1.05); opacity: 0.9; }
+  100% { transform: translateY(-80vh) translateX(0vw) scale(1); opacity: 0.8; }
+}
+
+/* Original example to place particles with JS (commented out as in original) */
+/*
+const container = document.querySelector('.floating-particles');
+for (let i = 0; i < 50; i++) { // Adjust count for density
+  const particle = document.createElement('div');
+  const size = Math.random() * 4 + 2; // Size between 2px and 6px
+  const type = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+  particle.className = `particle particle-${type}`;
+  particle.style.width = `${size}px`;
+  particle.style.height = `${size}px`;
+  particle.style.left = `${Math.random() * 100}%`;
+  particle.style.top = `${Math.random() * 100}%`;
+  particle.style.animationDelay = `-${Math.random() * 20}s`; // Stagger animation
+  particle.style.animationDuration = `${20 + Math.random() * 10}s`; // Vary duration
+  container.appendChild(particle);
+}
+*/

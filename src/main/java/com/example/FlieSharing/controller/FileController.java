@@ -193,7 +193,7 @@ public class FileController {
     }
 
     @GetMapping("/s/{uniqueId}")
-    public String accessSharedFile(@PathVariable String uniqueId, Model model) {
+    public String accessSharedFile(@PathVariable String uniqueId, Model model) { // Model parameter is crucial
         try {
             System.out.println("Controller: Accessing shared file with ID: " + uniqueId);
 
@@ -201,39 +201,45 @@ public class FileController {
 
             if (shareLink == null) {
                 System.out.println("Controller: Share link not found: " + uniqueId);
-                return "link-expired";
+                return "link-expired"; // Assuming you have src/main/resources/templates/link-expired.html
             }
 
             // Check if link has expired
             if (LocalDateTime.now().isAfter(shareLink.getExpiresAt())) {
                 System.out.println("Controller: Share link expired: " + uniqueId);
-                return "link-expired";
+                return "link-expired"; // Assuming you have src/main/resources/templates/link-expired.html
             }
 
             // Get the file
             FileEntity file = fileService.getFileById(shareLink.getFileId());
             if (file == null) {
                 System.out.println("Controller: File not found for shared link: " + uniqueId);
-                return "file-not-found";
+                return "file-not-found"; // Assuming you have src/main/resources/templates/file-not-found.html
             }
 
-            // Calculate remaining time
-            Duration remainingTime = Duration.between(LocalDateTime.now(), shareLink.getExpiresAt());
-            long remainingDays = remainingTime.toDays();
+            // --- ADD THESE LINES TO PASS DATA TO THE TEMPLATE ---
+            System.out.println("Controller: Valid share link found for file: " + file.getFileName());
 
-            System.out.println("Controller: Shared file access successful, remaining days: " + remainingDays);
+            model.addAttribute("file", file); // Pass the file object
 
-            model.addAttribute("file", file);
-            model.addAttribute("remainingDays", remainingDays);
-            model.addAttribute("uniqueId", uniqueId);
-            return "shared-file-view";
+            String shareUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/dropfilex/s/{uniqueId}")
+                    .buildAndExpand(uniqueId)
+                    .toUriString();
+            model.addAttribute("shareUrl", shareUrl); // Pass the generated public share URL
+
+            model.addAttribute("shareLinkExpiryTime", shareLink.getExpiresAt()); // Pass the actual expiry time
+
+            // --- THIS IS THE TEMPLATE YOU WANT TO RENDER ---
+            return "share-file"; // Renders src/main/resources/templates/share-file.html
+
         } catch (Exception e) {
-            System.err.println("Controller: Error accessing shared file: " + e.getMessage());
+            System.err.println("Error accessing shared file: " + e.getMessage());
             e.printStackTrace();
-            return "error";
+            // You might want a more generic error page here
+            return "error-page"; // Assuming you have src/main/resources/templates/error-page.html
         }
     }
-
     @GetMapping("/s/download/{uniqueId}")
     public ResponseEntity<Resource> downloadSharedFile(@PathVariable String uniqueId) {
         try {
