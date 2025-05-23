@@ -1,60 +1,70 @@
 package com.example.FlieSharing.service;
 
+import com.example.FlieSharing.entity.ShareLinkEntity;
 import com.example.FlieSharing.model.ShareLinkModel;
+import com.example.FlieSharing.repository.ShareLinkRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ShareLinkService {
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ShareLinkRepository shareLinkRepository;
 
-    private final RowMapper<ShareLinkModel> rowMapper = new RowMapper<ShareLinkModel>() {
-        @Override
-        public ShareLinkModel mapRow(ResultSet rs, int rowNum) throws SQLException {
-            ShareLinkModel shareLink = new ShareLinkModel();
-            shareLink.setId(rs.getLong("id"));
-            shareLink.setFileId(rs.getLong("file_id"));
-            shareLink.setUniqueId(rs.getString("unique_id"));
-            shareLink.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-            shareLink.setExpiresAt(rs.getTimestamp("expires_at").toLocalDateTime());
-            shareLink.setDownloadCount(rs.getInt("download_count"));
-            return shareLink;
+    private ShareLinkModel convertToModel(ShareLinkEntity entity) {
+        ShareLinkModel model = new ShareLinkModel();
+        BeanUtils.copyProperties(entity, model);
+        return model;
+    }
+
+    @Transactional
+    public ShareLinkModel createShareLink(Long fileId, LocalDateTime expiryTime) {
+        ShareLinkEntity shareLink = new ShareLinkEntity();
+        shareLink.setFileId(fileId);
+        shareLink.setShareIdentifier(UUID.randomUUID().toString()); // Set shareIdentifier
+        shareLink.setCreatedAt(LocalDateTime.now());
+        shareLink.setExpiresAt(expiryTime);
+        shareLink.setDownloadCount(0); // Initialize download count
+        shareLink.setActive(true); // Set isActive to true by default when creating
+
+        ShareLinkEntity savedLink = shareLinkRepository.save(shareLink);
+        System.out.println("ShareLinkService: Created share link for file ID " + fileId + " with identifier: " + savedLink.getShareIdentifier());
+        return convertToModel(savedLink);
+    }
+
+    // Renamed from getShareLinkByUniqueId
+    public ShareLinkModel getShareLinkByShareIdentifier(String shareIdentifier) {
+        System.out.println("ShareLinkService: Attempting to retrieve share link by identifier: " + shareIdentifier);
+        Optional<ShareLinkEntity> entityOptional = shareLinkRepository.findByShareIdentifier(shareIdentifier); // Call renamed repository method
+        if (entityOptional.isPresent()) {
+            System.out.println("ShareLinkService: Share link found for identifier: " + shareIdentifier);
+        } else {
+            System.out.println("ShareLinkService: Share link NOT found for identifier: " + shareIdentifier);
         }
-    };
-
-    public void createShareLink(ShareLinkModel shareLink) {
-        String sql = "INSERT INTO share_links (file_id, unique_id, created_at, expires_at, download_count) " +
-                "VALUES (?, ?, ?, ?, ?)";
-
-        jdbcTemplate.update(sql,
-                shareLink.getFileId(),
-                shareLink.getUniqueId(),
-                shareLink.getCreatedAt(),
-                shareLink.getExpiresAt(),
-                shareLink.getDownloadCount());
+        return entityOptional.map(this::convertToModel).orElse(null);
     }
 
-    public ShareLinkModel getShareLinkByUniqueId(String uniqueId) {
-        String sql = "SELECT * FROM share_links WHERE unique_id = ?";
-        List<ShareLinkModel> shareLinks = jdbcTemplate.query(sql, rowMapper, uniqueId);
-        return shareLinks.isEmpty() ? null : shareLinks.get(0);
+    @Transactional
+    public void incrementDownloadCount(String shareIdentifier) { // Parameter name updated for consistency
+        System.out.println("ShareLinkService: Incrementing download count for identifier: " + shareIdentifier);
+        shareLinkRepository.findByShareIdentifier(shareIdentifier).ifPresent(shareLink -> { // Call renamed repository method
+            shareLink.setDownloadCount(shareLink.getDownloadCount() + 1);
+            shareLinkRepository.save(shareLink);
+            System.out.println("ShareLinkService: Download count incremented for " + shareIdentifier + ". New count: " + shareLink.getDownloadCount());
+        });
     }
 
-    public void incrementDownloadCount(String uniqueId) {
-        String sql = "UPDATE share_links SET download_count = download_count + 1 WHERE unique_id = ?";
-        jdbcTemplate.update(sql, uniqueId);
-    }
-
-    public void deleteExpiredLinks() {
-        String sql = "DELETE FROM share_links WHERE expires_at < ?";
-        jdbcTemplate.update(sql, LocalDateTime.now());
+    @Transactional
+    public void deleteShareLinksByFileId(Long fileId) {
+        System.out.println("ShareLinkService: Deleting share links for file ID: " + fileId);
+        shareLinkRepository.deleteByFileId(fileId);
+        System.out.println("ShareLinkService: Share links deleted for file ID: " + fileId);
     }
 }

@@ -9,7 +9,8 @@ public class FileModel {
     private String uploadedBy;
     private LocalDateTime uploadTime;
     private LocalDateTime expiryTime;
-    private byte[] fileData;
+    // fileData is typically not included in the model for list views due to size
+    // private byte[] fileData;
 
     // Getters and Setters
 
@@ -53,13 +54,13 @@ public class FileModel {
         this.expiryTime = expiryTime;
     }
 
-    public byte[] getFileData() {
-        return fileData;
-    }
-
-    public void setFileData(byte[] fileData) {
-        this.fileData = fileData;
-    }
+    // If you need fileData in the model for specific cases, uncomment this:
+    // public byte[] getFileData() {
+    //     return fileData;
+    // }
+    // public void setFileData(byte[] fileData) {
+    //     this.fileData = fileData;
+    // }
 
     @Override
     public String toString() {

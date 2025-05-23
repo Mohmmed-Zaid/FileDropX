@@ -9,15 +9,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
-
-    public List<FileModel> getAll();
-
-    public ResponseEntity<?> uploadFile(MultipartFile file, String uploadBy) throws IOException;
-
-    public ResponseEntity<?> shareFile(int id);
-
-    public ResponseEntity<?> deleteFile(int id);
-
-    public FileEntity getFileById(Long id);
-
+    List<FileModel> getAll();
+    ResponseEntity<?> uploadFile(MultipartFile file, String uploadBy) throws IOException;
+    // shareFile(int id) is technically in the interface, but the controller now uses ShareLinkService directly for link creation.
+    // Keeping it for compatibility with the original interface if other parts relied on it.
+    ResponseEntity<?> shareFile(int id);
+    FileEntity getFileById(Long id);
+    ResponseEntity<?> deleteFile(Long id); // Consistent parameter type
 }

@@ -11,20 +11,20 @@ public class FileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_name")
+    @Column(name = "file_name", nullable = false)
     private String fileName;
 
-    @Column(name = "uploaded_by")
+    @Column(name = "uploaded_by", nullable = false)
     private String uploadedBy;
 
-    @Column(name = "upload_time")
+    @Column(name = "upload_time", nullable = false)
     private LocalDateTime uploadTime;
 
-    @Column(name = "expiry_time")
+    @Column(name = "expiry_time", nullable = false)
     private LocalDateTime expiryTime;
 
-    @Lob
-    @Column(name = "file_data", columnDefinition = "LONGBLOB")
+    @Lob // Indicates that this field should be stored as a large object (BLOB, BYTEA)
+    @Column(name = "file_data", columnDefinition = "LONGBLOB", nullable = false) // Explicitly set for MySQL
     private byte[] fileData;
 
 
@@ -88,6 +88,4 @@ public class FileEntity {
                 ", expiryTime=" + expiryTime +
                 '}';
     }
-
-
 }

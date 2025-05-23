@@ -1,15 +1,35 @@
-package com.example.FlieSharing.model;
+package com.example.FlieSharing.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-public class ShareLinkModel {
+@Entity
+@Table(name = "share_links")
+public class ShareLinkEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, name = "file_id")
     private Long fileId;
-    private String shareIdentifier; // Renamed from uniqueId
+
+    // Renamed from uniqueId to shareIdentifier to explicitly match database column
+    @Column(name = "share_identifier", nullable = false, unique = true)
+    private String shareIdentifier; // This maps to the 'share_identifier' column
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
     private LocalDateTime expiresAt;
-    private Integer downloadCount = 0;
+
+    private int downloadCount;
+
+    @Column(name = "is_active", nullable = false) // Ensure this field exists and is handled
     private boolean isActive;
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -52,11 +72,11 @@ public class ShareLinkModel {
         this.expiresAt = expiresAt;
     }
 
-    public Integer getDownloadCount() {
+    public int getDownloadCount() {
         return downloadCount;
     }
 
-    public void setDownloadCount(Integer downloadCount) {
+    public void setDownloadCount(int downloadCount) {
         this.downloadCount = downloadCount;
     }
 
@@ -66,18 +86,5 @@ public class ShareLinkModel {
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    @Override
-    public String toString() {
-        return "ShareLinkModel{" +
-                "id=" + id +
-                ", fileId=" + fileId +
-                ", shareIdentifier='" + shareIdentifier + '\'' +
-                ", createdAt=" + createdAt +
-                ", expiresAt=" + expiresAt +
-                ", downloadCount=" + downloadCount +
-                ", isActive=" + isActive +
-                '}';
     }
 }

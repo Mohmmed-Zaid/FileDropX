@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.transaction.annotation.Transactional; // Import for @Transactional
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,9 +24,8 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private FileRepository fileRepository;
 
-    // You might need to inject ShareLinkRepository if you have foreign key constraints
-    // @Autowired
-    // private ShareLinkRepository shareLinkRepository;
+    @Autowired // Inject ShareLinkService to handle related share link deletions
+    private ShareLinkService shareLinkService;
 
     private FileModel convertToModel(FileEntity entity) {
         FileModel model = new FileModel();
@@ -47,7 +46,7 @@ public class FileServiceImpl implements FileService {
         } catch (Exception e) {
             System.err.println("Service: Error fetching files: " + e.getMessage());
             e.printStackTrace();
-            return List.of(); // Return empty list instead of null
+            return List.of();
         }
     }
 
@@ -56,7 +55,6 @@ public class FileServiceImpl implements FileService {
         System.out.println("Service: Starting file upload process");
 
         try {
-            // Validate inputs
             if (file == null || file.isEmpty()) {
                 System.err.println("Service: File is null or empty");
                 throw new IllegalArgumentException("File cannot be empty");
@@ -67,44 +65,37 @@ public class FileServiceImpl implements FileService {
                 uploadBy = "Anonymous";
             }
 
-            // Log file details
             System.out.println("Service: Processing file upload:");
             System.out.println("  - File name: " + file.getOriginalFilename());
             System.out.println("  - File size: " + file.getSize() + " bytes");
             System.out.println("  - Content type: " + file.getContentType());
             System.out.println("  - Uploaded by: " + uploadBy);
 
-            // Validate file size (10MB limit)
-            if (file.getSize() > 10 * 1024 * 1024) {
+            if (file.getSize() > 10 * 1024 * 1024) { // 10MB limit
                 System.err.println("Service: File size exceeds 10MB limit");
                 throw new IllegalArgumentException("File size should not exceed 10MB");
             }
 
-            // Validate file name
             String fileName = file.getOriginalFilename();
             if (fileName == null || fileName.trim().isEmpty()) {
                 System.err.println("Service: File name is null or empty");
                 throw new IllegalArgumentException("File name cannot be empty");
             }
 
-            // Create and populate entity
             FileEntity entity = new FileEntity();
             entity.setFileName(fileName.trim());
             entity.setUploadedBy(uploadBy.trim());
             entity.setUploadTime(LocalDateTime.now());
-            entity.setExpiryTime(LocalDateTime.now().plusDays(1));
+            entity.setExpiryTime(LocalDateTime.now().plusDays(1)); // Default file expiry
 
-            // Convert file to byte array
             byte[] fileData = file.getBytes();
             System.out.println("Service: Successfully converted file to byte array, size: " + fileData.length);
             entity.setFileData(fileData);
 
-            // Save to database
             System.out.println("Service: Attempting to save file to database");
             FileEntity savedEntity = fileRepository.save(entity);
             System.out.println("Service: File saved successfully with ID: " + savedEntity.getId());
 
-            // Verify the save operation
             Optional<FileEntity> verifyEntity = fileRepository.findById(savedEntity.getId());
             if (verifyEntity.isPresent()) {
                 System.out.println("Service: Verified file exists in database after save");
@@ -130,16 +121,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public ResponseEntity<?> shareFile(int id) {
-        System.out.println("Service: Attempting to share file with ID: " + id);
-
+        System.out.println("Service: shareFile(int id) called (might be deprecated soon). ID: " + id);
         try {
             Long longId = (long) id;
             Optional<FileEntity> entityOptional = fileRepository.findById(longId);
 
             if (entityOptional.isPresent()) {
                 System.out.println("Service: File found for sharing, ID: " + id);
-                FileEntity entity = entityOptional.get();
-                return ResponseEntity.ok().body(convertToModel(entity));
+                return ResponseEntity.ok().body(convertToModel(entityOptional.get()));
             } else {
                 System.err.println("Service: File not found for sharing, ID: " + id);
                 throw new FileNotFoundException("File with ID " + id + " not found");
@@ -174,14 +163,11 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional // Added @Transactional annotation here
-    public ResponseEntity<?> deleteFile(int id) {
+    public ResponseEntity<?> deleteFile(Long id) { // Consolidated to use Long id
         System.out.println("Service: Starting file deletion process for ID: " + id);
 
         try {
-            Long longId = (long) id;
-
-            // First check if the file exists
-            Optional<FileEntity> fileOptional = fileRepository.findById(longId);
+            Optional<FileEntity> fileOptional = fileRepository.findById(id);
 
             if (!fileOptional.isPresent()) {
                 System.out.println("Service: File with ID " + id + " not found for deletion");
@@ -193,21 +179,13 @@ public class FileServiceImpl implements FileService {
             System.out.println("Service: Found file to delete - Name: " + fileToDelete.getFileName() +
                     ", Uploaded by: " + fileToDelete.getUploadedBy());
 
-            // --- IMPORTANT: Handle Foreign Key Constraints if they exist ---
-            // If your ShareLinkEntity has a foreign key to FileEntity,
-            // you MUST delete associated ShareLink records first,
-            // or configure cascade deletion in your database/JPA mapping.
-            // Example if you had a ShareLinkRepository:
-            // shareLinkRepository.deleteByFileId(longId); // You'd need to implement this method
+            // --- IMPORTANT: Delete associated ShareLink records first ---
+            shareLinkService.deleteShareLinksByFileId(id);
 
-            // Perform the deletion
-            fileRepository.deleteById(longId);
+            fileRepository.deleteById(id);
             System.out.println("Service: Delete command executed for file ID: " + id);
 
-            // Verify deletion by checking if file still exists
-            // This check might sometimes return true immediately after deleteById if the transaction
-            // hasn't committed yet, but for most cases, it's a good immediate verification.
-            Optional<FileEntity> deletedFileCheck = fileRepository.findById(longId);
+            Optional<FileEntity> deletedFileCheck = fileRepository.findById(id);
 
             if (!deletedFileCheck.isPresent()) {
                 System.out.println("Service: File with ID " + id + " successfully deleted and verified");
