@@ -1,32 +1,29 @@
 # Stage 1: Build
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3.9.4-openjdk-17 AS build
 
 WORKDIR /app
 
-# Copy your Maven wrapper scripts and pom.xml first
-COPY mvnw .
-COPY .mvn .mvn
+# Copy pom.xml and download dependencies (for better caching)
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Download dependencies
-RUN ./mvnw dependency:go-offline
-
-# Copy the rest of your source code
+# Copy source code and build
 COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Build the jar without tests
-RUN ./mvnw clean package -DskipTests
-
-# Stage 2: Run the jar
+# Stage 2: Runtime
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-# Copy jar from build stage
+# Copy the built JAR from build stage
 COPY --from=build /app/target/*.jar app.jar
+
+# Create uploads directory
+RUN mkdir -p /app/uploads
 
 # Expose port
 EXPOSE 8080
 
-# Run the jar
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
