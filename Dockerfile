@@ -1,12 +1,7 @@
 # Stage 1: Build
-# CHANGED: Using 'maven:3.9.6-openjdk-17' - this specific patch version with OpenJDK 17 is generally available.
-# Stage 1: Build
-# Alternative: Using 'maven:3-openjdk-17' - this is the most general Maven 3.x with OpenJDK 17 tag.
-FROM maven:3-openjdk-17 AS build # <--- CHANGE THIS LINE IF OPTION 1 FAILS
+# Using 'maven:3-openjdk-17' as it's a widely available and general tag for Maven 3.x with OpenJDK 17.
+FROM maven:3-openjdk-17 AS build
 
-
-
-# ... (rest of your Dockerfile remains the same)
 WORKDIR /app
 
 # Copy pom.xml and download dependencies (for better caching)
@@ -25,11 +20,11 @@ WORKDIR /app
 # Copy the built JAR from build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Create uploads directory
+# Create uploads directory (ensure it exists for file storage)
 RUN mkdir -p /app/uploads
 
-# Expose port
+# Expose port 8080, which is the default for Spring Boot applications
 EXPOSE 8080
 
-# Run the application
+# Command to run the application when the container starts
 ENTRYPOINT ["java", "-jar", "app.jar"]
