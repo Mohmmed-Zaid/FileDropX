@@ -1,7 +1,12 @@
 # Stage 1: Build
 # CHANGED: Using 'maven:3.9.6-openjdk-17' - this specific patch version with OpenJDK 17 is generally available.
-FROM maven:3.9.6-openjdk-17 AS build # <--- CHANGE THIS LINE
+# Stage 1: Build
+# Alternative: Using 'maven:3-openjdk-17' - this is the most general Maven 3.x with OpenJDK 17 tag.
+FROM maven:3-openjdk-17 AS build # <--- CHANGE THIS LINE IF OPTION 1 FAILS
 
+
+
+# ... (rest of your Dockerfile remains the same)
 WORKDIR /app
 
 # Copy pom.xml and download dependencies (for better caching)
