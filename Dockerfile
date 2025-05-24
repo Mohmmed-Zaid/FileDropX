@@ -1,22 +1,32 @@
-# ---------- Stage 1: Build ----------
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Stage 1: Build
+FROM maven:3.8.6-openjdk-17 AS build
 
 WORKDIR /app
 
-# Copy all project files, including .mvn and mvnw
-COPY . .
+# Copy your Maven wrapper scripts and pom.xml first
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
 
-# Make sure mvnw is executable
-RUN chmod +x ./mvnw
+# Download dependencies
+RUN ./mvnw dependency:go-offline
 
-# Build the app
+# Copy the rest of your source code
+COPY src ./src
+
+# Build the jar without tests
 RUN ./mvnw clean package -DskipTests
 
-# ---------- Stage 2: Run ----------
-FROM eclipse-temurin:17-jdk-alpine
+# Stage 2: Run the jar
+FROM openjdk:17-jdk-slim
 
-# Copy the built jar file from build stage
+WORKDIR /app
+
+# Copy jar from build stage
 COPY --from=build /app/target/*.jar app.jar
 
+# Expose port
 EXPOSE 8080
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -jar /app.jar"]
+
+# Run the jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
