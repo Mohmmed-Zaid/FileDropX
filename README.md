@@ -50,7 +50,7 @@ Files are delivered directly from our optimized servers, ensuring maximum transf
 
 ### 🔗 File Sharing Dashboard
 <div align="center">
-  <img src="last.png" alt="Google OAuth Sign-in" width="700"/>
+  <img src="image/last.png" alt="Google OAuth Sign-in" width="700"/>
   <p><em>Seamless Google OAuth2 integration for secure, hassle-free authentication</em></p>
 </div>
 
