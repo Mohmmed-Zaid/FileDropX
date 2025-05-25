@@ -38,7 +38,7 @@ Files are delivered directly from our optimized servers, ensuring maximum transf
 
 ### 📤 File Upload Interface
 <div align="center">
-  <img src="image/first-page.png" alt="File Upload Interface" width="700"/>
+  <img src="image/upload.png" alt="File Upload Interface" width="700"/>
   <p><em>Intuitive drag-and-drop upload experience with real-time user feedback</em></p>
 </div>
 
