@@ -36,17 +36,18 @@ Files are delivered directly from our optimized servers, ensuring maximum transf
   <p><em>Clean, modern landing page with feature highlights and easy login access</em></p>
 </div>
 
+### 🔐 OAuth Authentication
+<div align="center">
+  <img src="image/google.png" alt="File Sharing View" width="700"/>
+  <p><em>Complete sharing solution with unique links, QR codes, and download options</em></p>
+</div>
+
 ### 📤 File Upload Interface
 <div align="center">
   <img src="image/upload.png" alt="File Upload Interface" width="700"/>
   <p><em>Intuitive drag-and-drop upload experience with real-time user feedback</em></p>
 </div>
 
-### 🔐 OAuth Authentication
-<div align="center">
-  <img src="image/google.png" alt="File Sharing View" width="700"/>
-  <p><em>Complete sharing solution with unique links, QR codes, and download options</em></p>
-</div>
 
 ### 🔗 File Sharing Dashboard
 <div align="center">
