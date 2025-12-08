@@ -256,7 +256,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ---
 
 <div align="center">
-  <h3>Made with ❤️ by the FileDropX Team</h3>
+  <h3>Made with ❤️ by MZ</h3>
   <p>
     <a href="https://github.com/Mohmmed-Zaid/FileDropX">⭐ Star this project</a> |
     <a href="https://github.com/Mohmmed-Zaid/FileDropX/issues">🐛 Report Bug</a> |
